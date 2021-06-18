@@ -28,7 +28,7 @@
         type="button"
         class="button is-fullwidth is-success"
         id="btnSearch"
-        @click="reloadPage"
+        @click="clearAll(); getRandomPokemon();"
       >
         Показать случайного покемона
       </button>
@@ -72,6 +72,20 @@ export default {
     Pokemon,
   },
   methods: {
+    getRandomPokemon() {
+    let url = "https://pokeapi.co/api/v2/pokemon?limit=1&offset=555";
+    url = url.split("555").join(Math.floor(Math.random() * 1001));
+    this.$http.get(url).then(
+      (response) => {
+        this.pokemons = response.data.results;
+        this.filteredPokemons = response.data.results;
+        console.log(this.filteredPokemons);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+    },
     clearAll() {
       this.filteredPokemons = [];
     },
