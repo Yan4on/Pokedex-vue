@@ -12,7 +12,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    component: App,
+  
   },
   {
     path: "/term-of-use",

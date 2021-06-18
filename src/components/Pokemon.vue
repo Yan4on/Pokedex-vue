@@ -64,6 +64,7 @@ export default {
   created: function () {
     this.$http.get(this.url).then(
       (response) => {
+        console.log(this.url)
         this.pokemon.id = response.data.id
         console.log(this.pokemon.id)
         this.pokemon.type = response.data.types[0].type.name;
@@ -124,7 +125,7 @@ export default {
       } else {
         this.isOpen = false;
       }
-      history.pushState(null, null, '/pokemon/' + this.pokemon.id);
+      history.pushState(null, null, 'path:/pokemon/' + this.pokemon.id);
     },
   },
 };
