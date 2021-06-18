@@ -18,4 +18,4 @@
 
 **Ссылка**
 
-* [Ссылка на проект на github.com]( https://yan4on.github.io/Pokedex-vue/)
+<!-- * [Ссылка на проект на github.com]( https://yan4on.github.io/Pokedex-vue/) -->
