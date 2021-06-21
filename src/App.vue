@@ -1,39 +1,54 @@
 <template>
   <div id="app">
     <div class="topnav">
-      <button class="button is-fullwidth is-success btn-menu" v-on:click="isHidden = false">
+      <button
+        @click="clearAll()"
+        class="button is-fullwidth is-success btn-menu"
+        v-on:click="isHidden = false"
+      >
         <router-link to="/"> Главная </router-link>
       </button>
-      <button class="button is-fullwidth is-success btn-menu" v-on:click="isHidden = true" v-if="!isHidden">
+      <br />
+      <br />
+      <button
+        class="button is-fullwidth is-success btn-menu"
+        v-on:click="isHidden = true"
+        v-if="!isHidden"
+      >
         <router-link to="/term-of-use"> Правила пользования </router-link>
       </button>
     </div>
     <router-view />
-    <div class="column is-half is-offset-one-quarter" v-if="!isHidden">
-      <input
-        type="text"
-        placeholder="Поиск по имени"
-        v-model="search"
-        class="input is-rounded"
-      />
-      <button
-        type="button"
-        class="button is-fullwidth is-success"
-        id="btnSearch"
-        @click="[clearAll(), searchResult()]"
-      >
-        Найти
-      </button>
-      <button
-        type="button"
-        class="button is-fullwidth is-success"
-        id="btnSearch"
-        @click="clearAll(); getRandomPokemon();"
-      >
-        Показать случайного покемона
-      </button>
-      <div v-for="poke in filteredPokemons" :key="poke.id">
-        <Pokemon :name="poke.name" :url="poke.url" />
+    <div v-if="!isHidden">
+      <div class="column is-half is-offset-one-quarter">
+        <input
+          type="text"
+          placeholder="Поиск по имени"
+          v-model="search"
+          class="input is-rounded"
+        />
+        <button
+          type="button"
+          class="button is-fullwidth is-success"
+          id="btnSearch"
+          @click="[clearAll(), searchResult()]"
+        >
+          Найти
+        </button>
+        <button
+          type="button"
+          class="button is-fullwidth is-success"
+          id="btnSearch"
+          @click="
+            clearAll();
+            getRandomPokemon();
+          "
+        >
+          Показать случайного покемона
+        </button>
+        <div v-for="poke in filteredPokemons" :key="poke.id">
+          <Pokemon :name="poke.name" :url="poke.url" />
+        </div>
       </div>
     </div>
   </div>
@@ -41,17 +56,20 @@
 
 <script>
 import Pokemon from "./components/Pokemon";
-
 export default {
   name: "App",
   created: function() {
-    let url = "https://pokeapi.co/api/v2/pokemon?limit=1&offset=555";
-    url = url.split("555").join(Math.floor(Math.random() * 1001));
+    this.pokemonName = this.$route.params.id.toLowerCase();
+    // console.log(this.pokemonName);
+    let url = "https://pokeapi.co/api/v2/pokemon?limit=1&offset=11000";
+    url = url.split("11000").join(this.pokemonName - 1);
+
     this.$http.get(url).then(
       (response) => {
+        console.log(url);
         this.pokemons = response.data.results;
         this.filteredPokemons = response.data.results;
-        console.log(this.filteredPokemons);
+        // console.log(this.filteredPokemons);
       },
       (error) => {
         console.error(error);
@@ -73,18 +91,22 @@ export default {
   },
   methods: {
     getRandomPokemon() {
-    let url = "https://pokeapi.co/api/v2/pokemon?limit=1&offset=555";
-    url = url.split("555").join(Math.floor(Math.random() * 1001));
-    this.$http.get(url).then(
-      (response) => {
-        this.pokemons = response.data.results;
-        this.filteredPokemons = response.data.results;
-        console.log(this.filteredPokemons);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      let url = "https://pokeapi.co/api/v2/pokemon?limit=1&offset=555";
+      url = url.split("555").join(Math.floor(Math.random() * 1001));
+      this.$http.get(url).then(
+        (response) => {
+          this.pokemons = response.data.results;
+          this.filteredPokemons = response.data.results;
+          // this.pokemonDataID = response.data.results[0].url.match(
+          //   /\/([^/]+)\/?$/
+          // )[1];
+          // console.log(this.pokemonDataID);
+          // console.log(this.filteredPokemons);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
     },
     clearAll() {
       this.filteredPokemons = [];
@@ -105,7 +127,7 @@ export default {
                 pokemon.name ==
                 this.search[0].toLowerCase() + this.search.slice(1)
             );
-            console.log(this.filteredPokemons);
+            // console.log(this.filteredPokemons);
           },
           (error) => {
             console.error(error);
@@ -116,10 +138,7 @@ export default {
         //     pokemon.name == this.search[0].toLowerCase() + this.search.slice(1)
         // );
       }
-      console.log(this.filteredPokemons);
-    },
-    reloadPage() {
-      window.location.reload();
+      // console.log(this.filteredPokemons);
     },
   },
   computed: {},
@@ -162,5 +181,4 @@ export default {
 a {
   color: #ffffff !important;
 }
-
 </style>

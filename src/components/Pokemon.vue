@@ -1,18 +1,18 @@
 <template>
-  <div id="pokemon"> 
+  <div id="pokemon">
     <h1></h1>
     <small></small>
 
     <div class="card">
       <div class="card-image">
         <figure>
-          <img :src="currentImg || this.pokemon.front" alt="Placeholder image" />
+          <img :src="currentImg || pokemon.front" alt="Placeholder image" />
         </figure>
       </div>
       <div class="card-content">
         <div class="media">
           <div class="media-content">
-              <p>id: {{this.pokemon.id}}</p>
+            <p># {{ pokemon.id }}</p>
             <p class="title is-4">{{ name | upper }}</p>
             <p class="subtitle is-6">Тип: {{ pokemon.type }}</p>
           </div>
@@ -22,8 +22,8 @@
           <button class="button is-medium is-fullwidth" @click="changeSprite">
             Повернуть изображение
           </button>
-          <button class="button is-medium is-fullwidth" @click="openInfo">
-            <router-link v-bind:href="'/pokemon/' + this.pokemon.id"></router-link>
+          <button @click="openInfo()" class="button is-medium is-fullwidth">
+            <!-- <router-link v-bind:href="`/pokemon/' + ${pokemon.id}`"></router-link> -->
             Открыть информацию
           </button>
 
@@ -61,12 +61,13 @@
 
 <script>
 export default {
-  created: function () {
+  name: "Pokemon",
+  created: function() {
     this.$http.get(this.url).then(
       (response) => {
-        console.log(this.url)
-        this.pokemon.id = response.data.id
-        console.log(this.pokemon.id)
+        console.log(this.url);
+        this.pokemon.name = response.data.name;
+        this.pokemon.id = response.data.id;
         this.pokemon.type = response.data.types[0].type.name;
         this.pokemon.front = response.data.sprites.front_default;
         this.pokemon.back = response.data.sprites.back_default;
@@ -104,13 +105,13 @@ export default {
     url: String,
   },
   filters: {
-    upper: function (value) {
+    upper: function(value) {
       var newName = value[0].toUpperCase() + value.slice(1);
       return newName;
     },
   },
   methods: {
-    changeSprite: function () {
+    changeSprite: function() {
       if (this.isFront) {
         this.isFront = false;
         this.currentImg = this.pokemon.back;
@@ -119,13 +120,13 @@ export default {
         this.currentImg = this.pokemon.front;
       }
     },
-    openInfo: function () {
+    openInfo: function() {
       if (this.isOpen === false) {
         this.isOpen = true;
       } else {
         this.isOpen = false;
       }
-      history.pushState(null, null, 'path:/pokemon/' + this.pokemon.id);
+      history.pushState(null, null, "/pokemon/" + this.pokemon.id);
     },
   },
 };
